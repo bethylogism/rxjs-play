@@ -1,6 +1,5 @@
-import { Observable, Subject, interval, fromEvent, merge, from } from 'rxjs';
-import { pluck, map, scan, throttleTime, skipUntil } from 'rxjs/operators';
-import { createIncrementalCompilerHost } from 'typescript';
+import { Observable, fromEvent, merge, from } from 'rxjs';
+import { pluck, map, scan, throttleTime } from 'rxjs/operators';
 
 export const addItem = (val: any) => {
   const node = document.createElement('li');
@@ -31,6 +30,7 @@ fromEvent(document, 'mouseover')
   .pipe(throttleTime(50), pluck('clientY'))
   .subscribe(res => console.log(`Client Y!!! >> ${res}`));
 
+// The general format:
 const observable = new Observable(subscriber => {
   try {
     subscriber.next('He yo, heyyo');
