@@ -1,5 +1,6 @@
-import { Observable, fromEvent, merge } from 'rxjs';
-import { map, scan, throttleTime } from 'rxjs/operators';
+import { Observable, Subject, interval, fromEvent, merge, from } from 'rxjs';
+import { pluck, map, scan, throttleTime, skipUntil } from 'rxjs/operators';
+import { createIncrementalCompilerHost } from 'typescript';
 
 export const addItem = (val: any) => {
   const node = document.createElement('li');
@@ -8,15 +9,27 @@ export const addItem = (val: any) => {
   document.getElementById('output').appendChild(node);
 };
 
+from([
+  { first: 'Beth', last: 'Simon', age: 30 },
+  { first: 'Bob', last: 'Fell', age: 32 },
+  { first: 'Plato', last: 'Kant', age: 33 },
+])
+  .pipe(pluck('first'))
+  .subscribe(x => addItem(x));
+
 fromEvent(document, 'click')
   .pipe(
     throttleTime(1000),
     map((event: MouseEvent) => event.clientX),
     scan((count, clientX) => count + clientX, 0) // scan is like Array.reduce()
   )
-  .subscribe(count =>
-    console.log(`Clicked ${count} pixels to the right in total!`)
+  .subscribe(total =>
+    console.log(`Clicked ${total} pixels to the right in total!`)
   );
+
+fromEvent(document, 'mouseover')
+  .pipe(throttleTime(50), pluck('clientY'))
+  .subscribe(res => console.log(`Client Y!!! >> ${res}`));
 
 const observable = new Observable(subscriber => {
   try {
