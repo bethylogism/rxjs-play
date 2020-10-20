@@ -14,13 +14,13 @@ from([
   { first: 'Plato', last: 'Kant', age: 33 },
 ])
   .pipe(pluck('first'))
-  .subscribe(x => addItem(x));
+  .subscribe(addItem); // same as x => addItem(x);
 
 fromEvent(document, 'click')
   .pipe(
     throttleTime(1000),
     map((event: MouseEvent) => event.clientX),
-    scan((count, clientX) => count + clientX, 0) // scan is like Array.reduce()
+    scan((count, clientX) => count + clientX, 0) // scan is like Array.reduce(), but flat
   )
   .subscribe(total =>
     console.log(`Clicked ${total} pixels to the right in total!`)
